@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday, Arfa! The Best Gift</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom, #ffecd2, #fcb69f);
+            color: #333;
+            text-align: center;
+            padding: 50px;
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 10;
+        }
+        h1 {
+            color: #e91e63;
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 1.2em;
+            line-height: 1.6;
+        }
+        button {
+            background: #e91e63;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 10px;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #c2185b;
+        }
+        #initialMessage, #birthdayWish, #proposal, #celebration, #thanks, #finalMessage, #rejectionMessage {
+            display: none;
+        }
+        #rejectionMessage {
+            font-size: 1.5em;
+            color: #d32f2f;
+            margin-top: 20px;
+        }
+        .moving-button {
+            position: absolute !important; 
+            transition: all 0.5s ease-out;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .bloom-container, .hearts-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .flower {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #ffb6c1; 
+            border-radius: 50%;
+            opacity: 0;
+            animation: cuteBloom 3s ease-in-out forwards;
+        }
+        @keyframes cuteBloom {
+            0% { transform: scale(0) rotate(0deg); opacity: 0; }
+            30% { transform: scale(1.8) rotate(180deg); opacity: 1; }
+            100% { transform: scale(1) rotate(360deg); opacity: 0; }
+        }
+        .confetti {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: #ffe0e6; 
+            border-radius: 50%;
+            opacity: 0;
+            animation: cuteConfettiFall 4s ease-out forwards;
+        }
+        @keyframes cuteConfettiFall {
+            0% { transform: translateY(-100px) rotateZ(0deg) scale(0); opacity: 0.8; }
+            20% { transform: translateY(0px) rotateZ(180deg) scale(1); opacity: 1; }
+            100% { transform: translateY(100vh) rotateZ(720deg) scale(0.5); opacity: 0; }
+        }
+        .heart {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background-color: #ff69b4;
+            transform: rotate(-45deg);
+            opacity: 0;
+            animation: heartsBurst 2s ease-out forwards;
+        }
+        .heart::before, .heart::after {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background-color: #ff69b4;
+            border-radius: 50%;
+        }
+        .heart::before {
+            top: -7.5px;
+            left: 0;
+        }
+        .heart::after {
+            left: 7.5px;
+            top: 0;
+        }
+        @keyframes heartsBurst {
+            0% { transform: translate(-50%, -50%) scale(0) rotate(-45deg); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.2) rotate(-45deg); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(0) rotate(-45deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bloom-container" id="bloomContainer"></div>
+    <div class="hearts-container" id="heartsContainer"></div>
+    <div class="container">
+        <h1 id="mainHeading">🥳Happy Birthday, Arfa! 🎂 My Greatest Wish🥳🥳</h1>
+        
+        <div id="initialMessage">
+            <p>I have a special *😁Birthday Surprise😄* for you!</p>
+            <button id="startBtn">Open Your Gift</button>
+        </div>
+        
+        <div id="birthdayWish">
+            <p>Happy Birthday, 🥳🥳Arfa! Wishing you the happiest day ever! 🎉</p>
+        </div>
+        
+        <div id="proposal">
+            <p>For your birthday, Arfa, this is the most important question I'll ever ask...</p>
+            <p>Will you be my girlfriend?</p>
+            <button onclick="acceptProposal()">if have a rquest for you,Birthday Gift 😍</button>
+            <button id="noButton" onclick="rejectProposal()">No 😕</button>
+        </div>
+        
+        <div id="celebration">
+            <p>You said YES! Best. Birthday. Ever! 🥳</p>
+            <p>Let the celebration begin!</p>
+        </div>
+        
+        <div id="thanks">
+            <p>Thank you for making *😉your birthday😗* our new anniversary! ❤️</p>
+            <button id="welcomeBtn">Celebrate More</button>
+        </div>
+        
+        <div id="finalMessage">
+            <p>Welcome to our story, my badmosh birthday girl! ✨</p>
+        </div>
+        
+        <div id="rejectionMessage">
+            <p>It's your birthday, Arfa. Don't spoil the celebration! Click on 'Yes!'</p>
+        </div>
+    </div> 
+
+    <script>
+        const noButton = document.getElementById('noButton');
+        let noButtonClicks = 0; 
+
+        const rejectTexts = [
+            "Please naa🥺", 
+            "Soch lo dubara 🤔", 
+            "Please naa🙏", 
+            "Ik mouqa bas ik ✨", 
+            "I'm Waiting... ⏳",
+            "This is our future! 💍",
+            "Just say Yes! 😄",
+            "Don't make me move again! 🏃‍♀️",
+            "For Me? ❤️"
+        ]; 
+
+        document.getElementById('initialMessage').style.display = 'block'; 
+
+        // 1. Start Button: Birthday effects, then proposal
+        document.getElementById('startBtn').addEventListener('click', function() {
+            document.getElementById('initialMessage').style.display = 'none';
+            document.getElementById('birthdayWish').style.display = 'block';
+            document.getElementById('mainHeading').style.display = 'none'; 
+            
+            // Birthday Wish Effect
+            createCuteConfetti(40, 4); 
+            createCuteBloom(20, 2);    
+
+            setTimeout(() => {
+                document.getElementById('birthdayWish').style.display = 'none';
+                document.getElementById('proposal').style.display = 'block';
+                noButton.style.position = 'static';
+                noButton.style.transform = 'none'; 
+                clearEffects(); 
+            }, 3000); 
+        }); 
+
+        // 2. Accept: Full Celebration effects
+        function acceptProposal() {
+            document.getElementById('proposal').style.display = 'none';
+            document.getElementById('rejectionMessage').style.display = 'none'; 
+            document.getElementById('celebration').style.display = 'block';
+            
+            // Full Celebration effects
+            createCuteConfetti(80, 5); 
+            createCuteBloom(40, 3);    
+            createHeartsBurst(); 
+
+            setTimeout(() => {
+                document.getElementById('celebration').style.display = 'none';
+                document.getElementById('thanks').style.display = 'block';
+                clearEffects();
+            }, 5000);
+        } 
+
+        document.getElementById('welcomeBtn').addEventListener('click', function() {
+            document.getElementById('thanks').style.display = 'none';
+            document.getElementById('finalMessage').style.display = 'block';
+        }); 
+
+        // 4. Reject: Cycling text and movement
+        function rejectProposal() {
+            const newText = rejectTexts[noButtonClicks % rejectTexts.length];
+            noButton.textContent = newText;
+            
+            noButtonClicks++;
+            document.getElementById('rejectionMessage').style.display = 'block';
+            moveNoButton();
+        } 
+
+        function moveNoButton() {
+            const deltaX = (Math.random() - 0.5) * 400;
+            const deltaY = (Math.random() - 0.5) * 400; 
+
+            noButton.classList.add('moving-button');
+            noButton.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+        } 
+
+        // --- VISUAL EFFECT FUNCTIONS --- 
+
+        function createCuteBloom(count = 40, duration = 3) {
+            const bloomContainer = document.getElementById('bloomContainer');
+            for (let i = 0; i < count; i++) {
+                const flower = document.createElement('div');
+                flower.className = 'flower';
+                flower.style.left = Math.random() * 100 + '%';
+                flower.style.top = Math.random() * 100 + '%';
+                flower.style.animationDelay = Math.random() * duration + 's';
+                flower.style.animationDuration = duration + 's';
+                bloomContainer.appendChild(flower);
+                flower.addEventListener('animationend', () => { flower.remove(); });
+            }
+        } 
+
+        function createCuteConfetti(count = 80, duration = 4) {
+            const container = document.body;
+            for (let i = 0; i < count; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = `hsl(${Math.random() * 60 + 330}, 80%, 85%)`;
+                confetti.style.animationDelay = Math.random() * 2 + 's';
+                confetti.style.animationDuration = (duration + Math.random() * 1) + 's'; 
+                container.appendChild(confetti);
+                confetti.addEventListener('animationend', () => { confetti.remove(); });
+            }
+        } 
+
+        function createHeartsBurst() {
+            const heartsContainer = document.getElementById('heartsContainer');
+            const numHearts = 30; 
+
+            for (let i = 0; i < numHearts; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.style.left = `50%`;
+                heart.style.top = `50%`;
+                heart.style.animationDelay = Math.random() * 0.5 + 's'; 
+                heart.style.animationDuration = (1.5 + Math.random() * 1) + 's'; 
+                heartsContainer.appendChild(heart);
+                heart.addEventListener('animationend', () => { heart.remove(); });
+            }
+        } 
+
+        function clearEffects() {
+            document.querySelectorAll('.flower').forEach(el => el.remove());
+            document.querySelectorAll('.confetti').forEach(el => el.remove());
+            document.querySelectorAll('.heart').forEach(el => el.remove());
+        }
+    </script>
+</body>
+</html>
